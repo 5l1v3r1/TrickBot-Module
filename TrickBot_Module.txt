@@ -1,0 +1,58 @@
+  Modules overview
+
+  TrickBot has an embedded list of command and control servers and a list of “must-have” plugins. First, it contacts the
+  servers to retrieve these plugins, as well as an updated list of command and control servers and an additional list of
+  servers, used only for downloading purposes. After these initial actions, it awaits further instructions. One command is
+  to start a certain plugin. If that plugin does not exist, it uses the list of download servers to retrieve it first, then it loads
+  the plugin and executes the indicated exported function (from the command). As a persistence mechanism, some of
+  the plugins are loaded automatically when TrickBot malware is started, without waiting for a command from the C&C
+  servers. 
+ 
+  During the last 6 months of close monitoring and gathering statistics about this threat, our systems were able to
+  retrieve updates for several different active plugins, gathered around different functionalities, proving to have all the
+  right tools to perform an end-to-end attack:
+
+
+ • Lateral Movement
+   • WormDll/mWormDll/tWormDll - a worm component responsible for spreading into the local network via SMB by
+     exploiting through EternalBlue
+   • TabDll - uses EternalRomance to spread into the network via SMB
+   • ShareDll/mShareDll/tShareDLL - remote service manager using stolen credentials to install remote services on
+     other computers from the network
+ 
+ • Reconnaissance
+   • SystemInfo - collects information about the affected system 
+   • NetworkDll - performs network mapping
+   • Psfin - meant to identify POS-related terminals inside the compromised domain
+ 
+ • Collection
+   • ImportDll - collects varying browser information such as cookies or browser configuration
+   • Pwgrab - steals credentials from various applications
+   • aDll – steals active directory credentials
+ 
+ • Setting Foothold
+   • NewBCtestnDll – performs reverse proxy and executes commands
+   • VncDll – used by the attacker as RAT, giving the option to remotely view and control the victim’s computer
+ 
+ • Exfiltration
+   • Mailsearcher - searches for files with certain extensions (usually document files)
+ 
+ • Financial data theft
+   • InjectDll – used to steal financial information through webinjects by monitoring various banking websites
+ 
+ • Credential Access
+   • RdpscanDLL – performs bruteforce attack on a certain list of targets (indicated by the attacker)
+   
+ 
+  Some of these plugins can have configuration files, which serve varying purposes. If needed, they will be retrieved from
+  the command and control servers. Some of those retrieved by our researchers are described below:
+ 
+   • dinj – configuration file for injectDLL plugin, containing information about targeted financial institutions; the attack
+     uses server-side injections
+   • sinj - configuration file for injectDLL plugin, containing information about targeted financial institutions; the attack
+     uses redirections (also known as web fake injections).
+   • dpost – also used by the injectDLL module, containing a list of servers; the stolen financial information is sent to
+     one of the servers from this list
+   • mailconf - used by mailsearcher for exfiltration
+   • srv - used by rdpScanDLL as a list of C&C servers
+   • vncconf - used by vncDLL and rdpScanDll for as a list of C&C servers 
